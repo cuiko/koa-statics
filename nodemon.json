@@ -1,0 +1,13 @@
+{
+  "restartable": "rs",
+  "exec": "ts-node --files example/index.ts",
+  "verbose": true,
+  "execMap": {
+    "js": "node --harmony"
+  },
+  "watch": [
+    "example/**/*",
+    "src/**/*"
+  ],
+  "ext": "ts json"
+}

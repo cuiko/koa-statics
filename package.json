@@ -1,0 +1,43 @@
+{
+  "name": "@cuiko/koa-statics",
+  "version": "1.0.0",
+  "description": "Request static files by Koa.",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "nodemon dist/index.js",
+    "build": "tsc"
+  },
+  "main": "dist/index.js",
+  "repository": "https://github.com/cuiko/koa-statics.git",
+  "author": "cuiko <1064291677@qq.com>",
+  "license": "MIT",
+  "files": [
+    "dist/",
+    "index.d.ts",
+    "LICENSE"
+  ],
+  "keywords": [
+    "koa",
+    "static",
+    "router",
+    "middleware",
+    "typescript"
+  ],
+  "dependencies": {
+    "consolidate": "^0.16.0",
+    "debug": "^4.2.0",
+    "koa-router": "^9.4.0",
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.11.8",
+    "@types/ramda": "^0.27.24",
+    "ejs": "^3.1.5",
+    "eslint": "^7.11.0",
+    "koa": "^2.13.0",
+    "nodemon": "^2.0.4",
+    "pug": "^3.0.0",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
+  }
+}
