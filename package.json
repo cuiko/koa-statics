@@ -1,6 +1,6 @@
 {
   "name": "@cuiko/koa-statics",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Request static files by Koa.",
   "scripts": {
     "start": "npm run dev",
