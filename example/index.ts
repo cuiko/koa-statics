@@ -15,7 +15,7 @@ statics(app, [
   {
     route: '/',
     path: resolve(__dirname, './static/tpl'),
-    isExact: true,
+    exact: true,
     expectedFiles: ['ejs3.ejs'],
     tplType: 'ejs',
   },
@@ -28,4 +28,5 @@ statics(app, [
 
 app.listen(4000, '0.0.0.0', () => {
   console.log('server is starting on 4000 port')
+  console.log('http://localhost:4000')
 })

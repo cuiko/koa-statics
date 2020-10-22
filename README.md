@@ -27,7 +27,7 @@ const app = new Koa();
 statics(app, [{
   route: '/',
   path: path.resolve('./static/tpl'),
-  isExact: true,
+  exact: true,
   expectedFiles: 'ejs3.ejs',
   tplType: 'ejs',
   // ...other
@@ -38,8 +38,8 @@ statics(app, [{
 
 | 参数 | 类型 | 说明 |
 | --- | --- | --- |
-| app | Koa | `Koa` 实例 |
-| configs | Array<IStaticOpts> | 配置参数数组 |
+| app | Koa | Koa 实例 |
+| configs | Array\<IStaticOpts\> | 配置参数数组 |
 
 ### IStaticOpts 说明
 
@@ -60,12 +60,12 @@ interface IStaticOpts {
    * 路由路径是否需要带上后缀名
    * @default true
    */
-  isShowExt?: boolean
+  showExt?: boolean
   /**
    * 在此路由下只匹配一个页面，需要过滤后至少还有一个文件
    * @default true
    */
-  isExact?: boolean
+  exact?: boolean
   /**
    * 是否启用动态监听，需要事先确定deep
    * @default false
@@ -75,7 +75,7 @@ interface IStaticOpts {
    * 是否递归文件夹
    * @default false
    */
-  isRecursive?: boolean
+  recursive?: boolean
 
   /**
    * 模板引擎名称 参考: https://github.com/tj/consolidate.js
@@ -88,6 +88,7 @@ interface IStaticOpts {
    */
   expectedExts?: string[]
   /**
+   * 期待输出的文件
    */
   expectedFiles?: string[]
   /**

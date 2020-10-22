@@ -1,4 +1,4 @@
-import { fullFileName, fileExt_1 } from './regexp'
+import { fullFileName, fileExtWithoutDot } from './regexp'
 
 const common_contentType = new Map([
   [
@@ -50,9 +50,9 @@ const expectedRoute = (path: string): string => {
   return path
 }
 
-const expectedPath_dir = (path: string): string => path.endsWith('/') ? path : `${path}/`
+const expectedPathForDir = (path: string): string => path.endsWith('/') ? path : `${path}/`
 
-const expectedPath_file = (path: string): string => path.endsWith('/') ? path.slice(0, path.length - 1) : path
+const expectedPathForFile = (path: string): string => path.endsWith('/') ? path.slice(0, path.length - 1) : path
 
 const expectedExt = (ext: string): string => ext.startsWith('.') ? ext : `.${ext}`
 
@@ -60,11 +60,11 @@ const expectedExt = (ext: string): string => ext.startsWith('.') ? ext : `.${ext
 const getFileName = (str: string): string => str.match(fullFileName)[0]
 
 // 不带.
-const getFileExt_1 = (str: string): string => str.match(fileExt_1)[0]
+const getFileExtWithoutDot = (str: string): string => str.match(fileExtWithoutDot)[0]
 
 const routeParams = (str: string, length: number): string => {
   if (length === 0) {
-    return expectedPath_file(str)
+    return expectedPathForFile(str)
   } else {
     return routeParams(`${str}:${--length}_params/`, length)
   }
@@ -79,11 +79,11 @@ const getExtByTplType = (tplType: string) => extMap[tplType]
 export {
   getContentType,
   expectedRoute,
-  expectedPath_dir,
-  expectedPath_file,
+  expectedPathForDir,
+  expectedPathForFile,
   expectedExt,
   getFileName,
-  getFileExt_1,
+  getFileExtWithoutDot,
   routeParams,
   getExtByTplType,
 }

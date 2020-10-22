@@ -10,12 +10,12 @@ const debug = require('debug')('@cuiko/koa-statics')
 
 import {
   expectedRoute,
-  expectedPath_dir,
+  expectedPathForDir,
   expectedExt,
   routeParams,
   getFileName,
-  expectedPath_file,
-  getFileExt_1,
+  expectedPathForFile,
+  getFileExtWithoutDot,
   getContentType,
   getExtByTplType,
 } from './lib/util'
@@ -28,10 +28,10 @@ const router = new Router()
  * e.g. /a/b/ must be have '/'
  * @property {string} path 需要映射的本地地址
  * ----------------------是否启用----------------------
- * @property {boolean} isShowExt 路由路径是否需要带上后缀名 def:true
- * @property {boolean} isExact 在此路由下只匹配一个页面，需要过滤后至少还有一个文件
+ * @property {boolean} showExt 路由路径是否需要带上后缀名 def:true
+ * @property {boolean} exact 在此路由下只匹配一个页面，需要过滤后至少还有一个文件
  * @property {boolean} isDynamic 是否启用动态监听 [需要事先确定deep] def:false
- * @property {boolean} isRecursive 是否递归文件夹
+ * @property {boolean} recursive 是否递归文件夹
  * ----------------------模板引擎----------------------
  * @property {string} tplType 模板引擎名称/后缀名
  * ----------------------过滤----------------------
@@ -47,10 +47,10 @@ interface IStaticOpts {
   route: string
   path: string
 
-  isShowExt?: boolean
-  isExact?: boolean
+  showExt?: boolean
+  exact?: boolean
   isDynamic?: boolean
-  isRecursive?: boolean
+  recursive?: boolean
 
   tplType?: string
 
@@ -64,9 +64,9 @@ interface IStaticOpts {
 const filterFiles = (config: IStaticOpts): string[] => {
   const findFiles = (path_last?: string) =>
     R.forEach((dir: string): void => {
-      let path_current = expectedPath_dir(path_last || config.path) + dir
+      let path_current = expectedPathForDir(path_last || config.path) + dir
       let file = fs.statSync(path_current)
-      if (config.isRecursive && file.isDirectory()) {
+      if (config.recursive && file.isDirectory()) {
         ++deep
         nodeInfo = {
           ...nodeInfo,
@@ -120,10 +120,10 @@ const filterFiles = (config: IStaticOpts): string[] => {
 const __DEFAULTS__: IStaticOpts = {
   route: '',
   path: '',
-  isShowExt: true,
-  isExact: false,
+  showExt: true,
+  exact: false,
   isDynamic: false,
-  isRecursive: false,
+  recursive: false,
   // tplType: 'pug',
   deep: 0,
   expectedExts: [],
@@ -137,7 +137,7 @@ function statics(app: Koa, configs: IStaticOpts[]) {
     const config: IStaticOpts = JSON.parse(JSON.stringify(Object.assign({}, __DEFAULTS__, _config)))
 
     config.route = expectedRoute(config.route)
-    config.path = expectedPath_dir(config.path)
+    config.path = expectedPathForDir(config.path)
 
     if (config.deep < 0) {
       throw new Error('deep 必须大于等于0')
@@ -155,8 +155,8 @@ function statics(app: Koa, configs: IStaticOpts[]) {
           let req_file = Object.values(ctx.params).pop()
           // 请求后，获得文件列表
           let files = filterFiles(config)
-          // 生成isShowExt数组
-          let _files = R.map((file: string) => (config.isShowExt ? file : getFileName(file)))(files)
+          // 生成showExt数组
+          let _files = R.map((file: string) => (config.showExt ? file : getFileName(file)))(files)
           // 判断请求的文件名是否在其设置的目录内
           let findIndex = _files.indexOf(req_file as string)
           if (findIndex > -1) {
@@ -167,12 +167,12 @@ function statics(app: Koa, configs: IStaticOpts[]) {
               req_path += `${value}/`
             })(ctx.params)
             // 删除最后的'/'
-            req_path = expectedPath_file(req_path)
-            if (!config.isShowExt) {
-              req_path += `.${getFileExt_1(files[findIndex])}`
+            req_path = expectedPathForFile(req_path)
+            if (!config.showExt) {
+              req_path += `.${getFileExtWithoutDot(files[findIndex])}`
             }
             ctx.set({
-              'Content-Type': getContentType(getFileExt_1(req_path))
+              'Content-Type': getContentType(getFileExtWithoutDot(req_path))
             })
             ctx.body = fs.createReadStream(resolve(config.path, req_path))
           } else {
@@ -205,22 +205,22 @@ function statics(app: Koa, configs: IStaticOpts[]) {
         // 未使用模板引擎
         callback = (file) => async (ctx) => {
           ctx.set({
-            'Content-Type': getContentType(getFileExt_1(file))
+            'Content-Type': getContentType(getFileExtWithoutDot(file))
           })
           ctx.body = fs.createReadStream(resolve(config.path, file))
         }
       }
       // 是否开启精准模式
-      if (config.isExact) {
+      if (config.exact) {
         // 注册单页面路由
         if (files.length > 1) {
-          debug('已启用isExact，但是文件过滤结果有多个(%d)', files.length)
+          debug('已启用exact，但是文件过滤结果有多个(%d)', files.length)
         }
         router.get(config.route, callback(files[0]))
       } else {
         // 注册多路由
         R.forEach((file: string) => {
-          router.get(config.route + (config.isShowExt ? file : getFileName(file)), callback(file))
+          router.get(config.route + (config.showExt ? file : getFileName(file)), callback(file))
         })(files)
       }
     }
