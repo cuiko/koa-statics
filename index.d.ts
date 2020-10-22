@@ -44,7 +44,7 @@ declare function statics(app: Koa, configs: {
    * 是否启用动态监听，需要事先确定deep
    * @default false
    */
-  isDynamic?: boolean
+  dynamic?: boolean
   /**
    * 是否递归文件夹
    * @default false

@@ -30,7 +30,7 @@ const router = new Router()
  * ----------------------是否启用----------------------
  * @property {boolean} showExt 路由路径是否需要带上后缀名 def:true
  * @property {boolean} exact 在此路由下只匹配一个页面，需要过滤后至少还有一个文件
- * @property {boolean} isDynamic 是否启用动态监听 [需要事先确定deep] def:false
+ * @property {boolean} dynamic 是否启用动态监听 [需要事先确定deep] def:false
  * @property {boolean} recursive 是否递归文件夹
  * ----------------------模板引擎----------------------
  * @property {string} tplType 模板引擎名称/后缀名
@@ -49,7 +49,7 @@ interface IStaticOpts {
 
   showExt?: boolean
   exact?: boolean
-  isDynamic?: boolean
+  dynamic?: boolean
   recursive?: boolean
 
   tplType?: string
@@ -122,7 +122,7 @@ const __DEFAULTS__: IStaticOpts = {
   path: '',
   showExt: true,
   exact: false,
-  isDynamic: false,
+  dynamic: false,
   recursive: false,
   // tplType: 'pug',
   deep: 0,
@@ -147,7 +147,7 @@ function statics(app: Koa, configs: IStaticOpts[]) {
       config.expectedExts.push(expectedExt(config.tplType))
     }
 
-    if (config.isDynamic) {
+    if (config.dynamic) {
       // 开启动态监听
       for (let i = Math.floor(config.deep); i >= 0; --i) {
         router.get(config.route + routeParams(`:${i}_params/`, i), async (ctx) => {
