@@ -231,4 +231,4 @@ function statics(app: Koa, configs: IStaticOpts[]) {
   app.use(router.allowedMethods())
 }
 
-export default statics
+export = statics

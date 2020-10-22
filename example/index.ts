@@ -1,5 +1,5 @@
 import * as Koa from 'koa'
-import statics from '../src/index'
+import statics = require('../src/index')
 import { resolve } from 'path'
 
 const app = new Koa()

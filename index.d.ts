@@ -1,8 +1,8 @@
 /* =================== USAGE ===================
 
-    import * as Koa from 'koa';
-    import statics from '@cuiko/koa-statics';
-    import * as path from 'path';
+    const Koa = require('koa');
+    const statics = require('@cuiko/koa-statics');
+    const path = require('path');
 
     const app = new Koa();
     statics(app, [{
